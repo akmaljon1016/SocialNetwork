@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        android:title="Main_Meny"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/settings_menu"
+                android:icon="@drawable/settings"
+                android:title="settings"
+                app:showAsAction="withText" />
+            <item
+                android:id="@+id/profile_menu"
+                android:icon="@drawable/profile"
+                android:title="profile"
+                app:showAsAction="withText" />
+            <item
+                android:id="@+id/findFreiends_menu"
+                android:title="Find Friends"
+                android:icon="@drawable/ic_baseline_people_24"
+                app:showAsAction="withText" />
+
+        </menu>
+    </item>
+</menu>

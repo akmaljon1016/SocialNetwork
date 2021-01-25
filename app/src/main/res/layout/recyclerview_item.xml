@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/rec_item_image"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/mic" />
+
+        <TextView
+            android:id="@+id/rec_item_userName"
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@id/rec_item_image"
+            android:text="Username"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/rec_item_phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rec_item_userName"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="80dp"
+            android:layout_toRightOf="@id/rec_item_image"
+            android:text="You have reached 80% of AT_499_BDT" />
+
+        <TextView
+            android:id="@+id/rec_item_clock"
+            android:layout_width="50dp"
+            android:visibility="invisible"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:text="45 min ago"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:src="@drawable/online_icon"
+            android:layout_marginRight="20dp"
+            android:visibility="invisible"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/rec_item_clock"
+            android:layout_alignParentRight="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
