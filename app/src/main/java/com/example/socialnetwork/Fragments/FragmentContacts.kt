@@ -59,4 +59,5 @@ class FragmentContacts : Fragment() {
         })
         binding.recyclerview.adapter = adapter
     }
+//    comment
 }
