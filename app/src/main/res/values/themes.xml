@@ -20,7 +20,7 @@
         <item name="colorControlNormal">@color/white</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/splash_background</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondary">@color/black</item>
         <item name="colorSecondaryVariant">@color/white</item>
     </style>
 

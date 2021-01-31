@@ -26,7 +26,7 @@ class FragmentContactViewModel : ViewModel() {
         currentUserKey = mAuth.currentUser?.uid.toString()
         RootRef = FirebaseDatabase.getInstance().getReference().child("Contacts")
         RootRefUser = FirebaseDatabase.getInstance().getReference().child("Users")
-        getContectUserKey()
+    getContectUserKey()
     }
 
     fun getContectUserKey() {
@@ -34,12 +34,17 @@ class FragmentContactViewModel : ViewModel() {
         RootRef.child(currentUserKey.toString()).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 currentList.clear()
+                _contactList.value?.clear()
+                contactList.value?.clear()
                 val iterator = snapshot.children.iterator()
                 while (iterator.hasNext()) {
                     val contactKey = iterator.next().key.toString()
                     RootRefUser.child(contactKey)
                         .addValueEventListener(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
+                                currentList.clear()
+                                _contactList.value?.clear()
+                                contactList.value?.clear()
                                 val user: MainRecObject? =
                                     snapshot.getValue(MainRecObject::class.java)
                                 Log.d("key", user.toString())
@@ -48,7 +53,6 @@ class FragmentContactViewModel : ViewModel() {
                                 }
                                 _contactList.value = currentList
                             }
-
 
                             override fun onCancelled(error: DatabaseError) {
 
@@ -61,6 +65,31 @@ class FragmentContactViewModel : ViewModel() {
 
             override fun onCancelled(error: DatabaseError) {
 
+            }
+
+        })
+    }
+
+    fun observe() {
+        RootRef.child(currentUserKey.toString()).addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                getContectUserKey()
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                getContectUserKey()
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                      getContectUserKey()
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                     getContectUserKey()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                     getContectUserKey()
             }
 
         })

@@ -30,6 +30,7 @@ class CreateAccount : AppCompatActivity() {
     lateinit var countryCode: CountryCodePicker
     lateinit var phoneNumber: EditText
     lateinit var txtCreateAccount: TextView
+    lateinit var txtAlreadyHaveAccount:TextView
     lateinit var auth: FirebaseAuth
     lateinit var RootRef: DatabaseReference
     lateinit var callBacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
@@ -52,11 +53,16 @@ class CreateAccount : AppCompatActivity() {
         countryCode = findViewById(R.id.ed_countryCode)
         phoneNumber = findViewById(R.id.ed_phoneNumber)
         txtCreateAccount = findViewById(R.id.txtCreateAccount)
+        txtAlreadyHaveAccount=findViewById(R.id.txtAlreadyHaveAccount)
         verificationCodeInput = findViewById(R.id.verificationCodeInput)
         btn_ok = findViewById(R.id.btn_ok)
 
         txtCreateAccount.setOnClickListener {
             val intent = Intent(this, CreateAccountEmail::class.java)
+            startActivity(intent)
+        }
+        txtAlreadyHaveAccount.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
 

@@ -11,4 +11,6 @@
     <color name="splash_textColor">#b9babe</color>
     <color name="splash_default">#b9babe</color>
     <color name="home_background">#E5E5E5</color>
+    <color name="red">#FB0101</color>
+    <color name="green">#38FA02</color>
 </resources>
