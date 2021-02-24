@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_send_request.*
 
-class SendRequestActivity : AppCompatActivity(){
+class SendRequestActivity : AppCompatActivity() {
 
     lateinit var binding: ActivitySendRequestBinding
     lateinit var RootRef: DatabaseReference
@@ -22,6 +22,7 @@ class SendRequestActivity : AppCompatActivity(){
     private var recieverId: String? = null
     private var current_State: String? = null
     private var senderUserId: String? = null
+    lateinit var NotificationRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +32,10 @@ class SendRequestActivity : AppCompatActivity(){
         RootRef = FirebaseDatabase.getInstance().getReference("Users").child(recieverId!!)
         ChatRequestRef = FirebaseDatabase.getInstance().getReference().child("Chat Requests")
         ContactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts")
+        NotificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications")
         mAuth = FirebaseAuth.getInstance()
         senderUserId = mAuth.currentUser?.uid
         current_State = "new"
-        manageRequest()
         RootRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val name: String = snapshot.child("name").value.toString()
@@ -46,6 +47,7 @@ class SendRequestActivity : AppCompatActivity(){
                     .placeholder(R.drawable.avatar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.imageView)
+                   manageRequest()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -53,9 +55,9 @@ class SendRequestActivity : AppCompatActivity(){
             }
 
         })
-        binding.btnSendRequest.setOnClickListener {
-            manageRequest()
-        }
+//        binding.btnSendRequest.setOnClickListener {
+//            manageRequest()
+//        }
     }
 
     fun manageRequest() {
@@ -83,8 +85,8 @@ class SendRequestActivity : AppCompatActivity(){
                         ContactsRef.child(senderUserId.toString())
                             .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
-                                    if (snapshot.hasChild(recieverId.toString())){
-                                            current_State="friends"
+                                    if (snapshot.hasChild(recieverId.toString())) {
+                                        current_State = "friends"
                                         binding.btnSendRequest.setText("Remove this Contact")
                                     }
                                 }
@@ -117,7 +119,7 @@ class SendRequestActivity : AppCompatActivity(){
                 if (current_State.equals("request_recieved")) {
                     AcceptChatRequest()
                 }
-                if (current_State.equals("friends")){
+                if (current_State.equals("friends")) {
                     removeSpecificContact()
                 }
             }
@@ -199,6 +201,18 @@ class SendRequestActivity : AppCompatActivity(){
             .setValue("sent")
             .addOnCompleteListener {
                 if (it.isSuccessful) {
+                    val chatNotificationMap: HashMap<String, String> = HashMap()
+                    chatNotificationMap.put("from", senderUserId.toString())
+                    chatNotificationMap.put("type", "request")
+                    NotificationRef.child(recieverId.toString()).push()
+                        .setValue(chatNotificationMap)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                btnSendRequest.isEnabled = true
+                                current_State = "request_sent"
+                                btnSendRequest.setText("Cancel Chat Request")
+                            }
+                        }
                     ChatRequestRef.child(recieverId.toString()).child(senderUserId.toString())
                         .child("request_type").setValue("recieved")
                         .addOnCompleteListener {

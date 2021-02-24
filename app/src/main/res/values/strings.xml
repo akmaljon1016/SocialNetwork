@@ -1,8 +1,15 @@
 <resources>
-    <string name="app_name">SocialNetwork</string>
-    <string name="Lorem">Lorem ipsum dolor set amet,consectetur adapiscing elit vivamus</string>
+    <string name="app_name">Chathouse</string>
+    <string name="page1">Tezkor xabar almashish </string>
+    <string name="page2">Ishonchli xabar almashish </string>
+    <string name="page3">Sodda interfeys xabar almashish </string>
     <string name="create_account">Create Account</string>
     <string name="ok">OK</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="choices">
+        <item>Images</item>
+        <item>PDF</item>
+        <item>Ms Word</item>
+    </string-array>
 </resources>

@@ -31,7 +31,6 @@ class FragmentRequest : Fragment() {
     lateinit var ContactsRef: DatabaseReference
     lateinit var mAuth: FirebaseAuth
     private var currentUserId: String? = null
-    var list_user_id: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,15 +81,15 @@ class FragmentRequest : Fragment() {
                     position: Int,
                     model: MainRecObject
                 ) {
+                    var list_user_id: String = getRef(position).key.toString()
                     holder.request_accept_button.visibility = View.VISIBLE
                     holder.request_cancel_button.visibility = View.VISIBLE
                     holder.request_accept_button.setOnClickListener {
-                        AcceptRequest()
+                        AcceptRequest(list_user_id)
                     }
                     holder.request_cancel_button.setOnClickListener {
-                        CancelRequest()
+                        CancelRequest(list_user_id)
                     }
-                    list_user_id = getRef(position).key
                     val getTypeRef: DatabaseReference = getRef(position).child("request_type").ref
                     getTypeRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -115,6 +114,30 @@ class FragmentRequest : Fragment() {
                                             }
 
                                         })
+                                } else if (type.equals("sent")) {
+                                    holder.request_accept_button.setText("Request sent")
+                                    holder.request_accept_button.isEnabled = false
+                                    // holder.request_cancel_button.visibility=View.INVISIBLE
+
+                                    RootUserRef.child(list_user_id.toString())
+                                        .addValueEventListener(object : ValueEventListener {
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                val requester: MainRecObject? =
+                                                    snapshot.getValue(MainRecObject::class.java)
+                                                Glide.with(holder.rec_main_image)
+                                                    .load(requester?.profileImage)
+                                                    .placeholder(R.drawable.person)
+                                                    .into(holder.rec_main_image)
+                                                holder.rec_main_username.setText(requester?.name)
+                                                holder.rec_main_phoneNumber.setText("you have sent a request to" + requester?.name)
+                                            }
+
+                                            override fun onCancelled(error: DatabaseError) {
+
+                                            }
+
+                                        })
+
                                 }
                             }
                         }
@@ -130,7 +153,7 @@ class FragmentRequest : Fragment() {
         adapter.startListening()
     }
 
-    private fun CancelRequest() {
+    private fun CancelRequest(list_user_id:String) {
         ChatRequestRef.child(currentUserId.toString()).child(list_user_id.toString()).removeValue()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -138,14 +161,18 @@ class FragmentRequest : Fragment() {
                         .removeValue()
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
-                                Toast.makeText(requireContext(), "Request Cancelled", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Request Cancelled",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                 }
             }
     }
 
-    private fun AcceptRequest() {
+    private fun AcceptRequest(list_user_id:String) {
         ContactsRef.child(currentUserId.toString()).child(list_user_id.toString()).child("Contacts")
             .setValue("Saved").addOnCompleteListener {
                 if (it.isSuccessful) {

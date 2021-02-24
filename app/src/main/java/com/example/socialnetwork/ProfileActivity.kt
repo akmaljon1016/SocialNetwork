@@ -50,6 +50,7 @@ class ProfileActivity : AppCompatActivity() {
         binding.profileOkButton.setOnClickListener {
             Toast.makeText(this, viewmodel.currentUserId.toString(), Toast.LENGTH_SHORT).show()
             viewmodel.profileOK(binding.profileName.text.toString())
+            Toast.makeText(this, "Updated", Toast.LENGTH_SHORT).show()
         }
         binding.profileImage.setOnClickListener {
             intent = Intent()

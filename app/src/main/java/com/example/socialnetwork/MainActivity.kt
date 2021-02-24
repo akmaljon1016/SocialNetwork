@@ -38,12 +38,12 @@ class MainActivity : AppCompatActivity() {
         onBoardingViewPager = findViewById(R.id.screenPager)
         tabLayout = findViewById(R.id.tabLayout)
         val onBoardingData: MutableList<OnBoardingData> = arrayListOf()
-        onBoardingData.add(OnBoardingData("Message", resources.getString(R.string.Lorem), null))
-        onBoardingData.add(OnBoardingData("Message", resources.getString(R.string.Lorem), null))
+        onBoardingData.add(OnBoardingData("Message", resources.getString(R.string.page1),  R.drawable.vectorsas))
+        onBoardingData.add(OnBoardingData("Message", resources.getString(R.string.page2), R.drawable.vectorsas))
         onBoardingData.add(
             OnBoardingData(
                 "Message",
-                resources.getString(R.string.Lorem),
+                resources.getString(R.string.page3),
                 R.drawable.vectorsas
             )
         )

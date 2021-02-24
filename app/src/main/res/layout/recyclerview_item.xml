@@ -35,7 +35,7 @@
             android:layout_below="@id/rec_item_userName"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="80dp"
+            android:layout_marginRight="40dp"
             android:layout_toRightOf="@id/rec_item_image"
             android:text="You have reached 80% of AT_499_BDT" />
 
@@ -51,6 +51,7 @@
             android:visibility="invisible" />
 
         <ImageView
+            android:id="@+id/onlineImage"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_below="@id/rec_item_clock"

@@ -22,15 +22,18 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         mAuth = FirebaseAuth.getInstance()
-        email = intent.extras?.getString("email")
-        password = intent.extras?.getString("password")
+        email = intent.extras?.getString("email")?.trim()
+        password = intent.extras?.getString("password")?.trim()
 
         binding.email.setText(email)
         binding.password.setText(password)
 
         binding.btnLogin.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE
-            mAuth!!.signInWithEmailAndPassword(email.toString(), password.toString())
+            mAuth!!.signInWithEmailAndPassword(
+                binding.email.text.trim().toString(),
+                binding.password.text.trim().toString()
+            )
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
 
@@ -40,7 +43,8 @@ class LoginActivity : AppCompatActivity() {
                         savePrefData()
                         finish()
                     } else {
-                        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, it.exception?.message.toString(), Toast.LENGTH_SHORT)
+                            .show()
                         binding.progressBar.visibility = View.INVISIBLE
                     }
                 }

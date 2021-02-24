@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.Telephony
 import android.telephony.SmsMessage
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -23,6 +24,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.iid.FirebaseInstanceId
 import com.hbb20.CountryCodePicker
 
 class CreateAccount : AppCompatActivity() {
@@ -30,9 +32,10 @@ class CreateAccount : AppCompatActivity() {
     lateinit var countryCode: CountryCodePicker
     lateinit var phoneNumber: EditText
     lateinit var txtCreateAccount: TextView
-    lateinit var txtAlreadyHaveAccount:TextView
+    lateinit var txtAlreadyHaveAccount: TextView
     lateinit var auth: FirebaseAuth
     lateinit var RootRef: DatabaseReference
+    lateinit var UsersRef: DatabaseReference
     lateinit var callBacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     var sharedPreferences: SharedPreferences? = null
     var storedVerificationId: String? = null
@@ -49,13 +52,15 @@ class CreateAccount : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         auth = FirebaseAuth.getInstance()
         RootRef = FirebaseDatabase.getInstance().getReference()
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users")
         createAccount = findViewById(R.id.btn_createAccount)
         countryCode = findViewById(R.id.ed_countryCode)
         phoneNumber = findViewById(R.id.ed_phoneNumber)
         txtCreateAccount = findViewById(R.id.txtCreateAccount)
-        txtAlreadyHaveAccount=findViewById(R.id.txtAlreadyHaveAccount)
+        txtAlreadyHaveAccount = findViewById(R.id.txtAlreadyHaveAccount)
         verificationCodeInput = findViewById(R.id.verificationCodeInput)
         btn_ok = findViewById(R.id.btn_ok)
+
 
         txtCreateAccount.setOnClickListener {
             val intent = Intent(this, CreateAccountEmail::class.java)
@@ -146,17 +151,25 @@ class CreateAccount : AppCompatActivity() {
 
                 if (task.isSuccessful) {
                     val currentUserId = auth.currentUser!!.uid
-                    val profileMap: HashMap<String, String> = HashMap()
-                    profileMap.put("profileImage", "")
-                    profileMap.put("uid", currentUserId)
-                    profileMap.put("name", "")
-                    profileMap.put("phoneNumber", phoneNumber.text.toString())
-                    RootRef.child("Users").child(currentUserId).setValue(profileMap)
-                    progressBar.visibility = View.INVISIBLE
-                    intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                    savePrefData()
-                    finish()
+                    val deviceToken: String? = FirebaseInstanceId.getInstance().getToken()
+                    Log.d("token",deviceToken.toString())
+                    RootRef.child("Users").child(currentUserId).child("device_token").setValue(deviceToken)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                val profileMap: HashMap<String, String> = HashMap()
+                                profileMap.put("profileImage", "")
+                                profileMap.put("uid", currentUserId)
+                                profileMap.put("name", "")
+                                profileMap.put("phoneNumber", phoneNumber.text.toString())
+                                profileMap.put("device_token",deviceToken.toString())
+                                RootRef.child("Users").child(currentUserId).setValue(profileMap)
+                                progressBar.visibility = View.INVISIBLE
+                                intent = Intent(this, HomeActivity::class.java)
+                                startActivity(intent)
+                                savePrefData()
+                                finish()
+                            }
+                        }
                 } else {
                     Toast.makeText(this, "Verivication Code Wrong", Toast.LENGTH_SHORT).show()
                 }

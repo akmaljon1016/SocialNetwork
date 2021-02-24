@@ -34,7 +34,7 @@ class FragmentContacts : Fragment() {
     lateinit var ContactsRef: DatabaseReference
     lateinit var mAuth: FirebaseAuth
     private var currentUserId: String? = null
-    var list_user_id: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +74,7 @@ class FragmentContacts : Fragment() {
                     model: MainRecObject
                 ) {
 
-                    list_user_id = getRef(position).key
+                   var list_user_id:String = getRef(position).key.toString()
                     RootUserRef.child(list_user_id.toString())
                         .addValueEventListener(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
